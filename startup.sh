@@ -1,1 +1,1 @@
-gunicorn -k uvicorn.workers.UvicornWorker main:app --timeout 120 --workers 1
+gunicorn -k uvicorn.workers.UvicornWorker server.main:app --timeout 120 --workers 1
