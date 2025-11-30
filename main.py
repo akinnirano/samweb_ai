@@ -12,8 +12,8 @@ from dotenv import load_dotenv
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta, time
 
-from db import SessionLocal, engine, Base  # type: ignore
-from models import Appointment  # type: ignore
+from .db import SessionLocal, engine, Base  # type: ignore
+from .models import Appointment  # type: ignore
 
 load_dotenv()
 
