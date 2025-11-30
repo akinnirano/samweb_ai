@@ -1,1 +1,1 @@
-uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+gunicorn -k uvicorn.workers.UvicornWorker main:app --timeout 120 --workers 1
