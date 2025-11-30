@@ -249,13 +249,14 @@ Client: {payload.name} ({payload.email}, {payload.phone or '-'})
 Notes:
 {payload.notes or '-'}
   """.strip()
+  notes_html = (payload.notes or '').replace('\n','<br/>') or '-'
   html_body = f"""
   <h2>New appointment booked</h2>
   <p><strong>Staff:</strong> {staff['name']}</p>
   <p><strong>When:</strong> {when_str}</p>
   <p><strong>Duration:</strong> {payload.duration_min} minutes</p>
   <p><strong>Client:</strong> {payload.name} ({payload.email}, {payload.phone or '-'})</p>
-  <p><strong>Notes:</strong><br/>{(payload.notes or '').replace('\n','<br/>') or '-'}</p>
+  <p><strong>Notes:</strong><br/>{notes_html}</p>
   """.strip()
   try:
     send_staff_email(staff["email"], "New Appointment Booking", text_body, html_body)
