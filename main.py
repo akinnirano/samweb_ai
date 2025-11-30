@@ -12,8 +12,13 @@ from dotenv import load_dotenv
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta, time
 
-from .db import SessionLocal, engine, Base  # type: ignore
-from .models import Appointment  # type: ignore
+# Support both package mode (server.main) and flat mode (main.py at root)
+try:
+  from .db import SessionLocal, engine, Base  # type: ignore
+  from .models import Appointment  # type: ignore
+except Exception:
+  from db import SessionLocal, engine, Base  # type: ignore
+  from models import Appointment  # type: ignore
 
 load_dotenv()
 
