@@ -6,9 +6,14 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 SSL_CA = os.getenv("MYSQL_SSL_CA") or os.getenv("DB_SSL_CA")
 
 connect_args = {}
-if DATABASE_URL and DATABASE_URL.startswith("sqlite"):
+if not DATABASE_URL:
+    # Local/dev fallback to SQLite
+    os.makedirs("data", exist_ok=True)
+    DATABASE_URL = "sqlite:///./data/app.db"
     connect_args = {"check_same_thread": False}
-elif DATABASE_URL and DATABASE_URL.startswith("mysql+pymysql://"):
+elif DATABASE_URL.startswith("sqlite"):
+    connect_args = {"check_same_thread": False}
+elif DATABASE_URL.startswith("mysql+pymysql://"):
     if SSL_CA:
         connect_args = {"ssl": {"ca": SSL_CA}}
     elif "mysql.database.azure.com" in DATABASE_URL:
