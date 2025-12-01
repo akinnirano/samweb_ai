@@ -1,7 +1,11 @@
 from datetime import datetime
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import String, Integer, DateTime, Text
-from .db import Base
+# Support both package mode (server.*) and flat mode (files at root)
+try:
+  from .db import Base
+except Exception:
+  from db import Base
 
 
 class Appointment(Base):
