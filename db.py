@@ -2,16 +2,23 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+_env_database_url = (os.getenv("DATABASE_URL") or "").strip()
 SSL_CA = os.getenv("MYSQL_SSL_CA") or os.getenv("DB_SSL_CA")
 
 connect_args = {}
-if not DATABASE_URL:
-    # Local/dev fallback to SQLite
-    os.makedirs("data", exist_ok=True)
-    DATABASE_URL = "sqlite:///./data/app.db"
+if not _env_database_url:
+    # Fallback to SQLite. Prefer persisted path on Azure App Service.
+    azure_wwwroot = "/home/site/wwwroot"
+    base_dir = azure_wwwroot if os.path.isdir(azure_wwwroot) else "."
+    db_dir = os.path.join(base_dir, "data")
+    os.makedirs(db_dir, exist_ok=True)
+    db_path = os.path.join(db_dir, "app.db")
+    DATABASE_URL = f"sqlite:///{db_path}"
     connect_args = {"check_same_thread": False}
-elif DATABASE_URL.startswith("sqlite"):
+else:
+    DATABASE_URL = _env_database_url
+
+if DATABASE_URL.startswith("sqlite"):
     connect_args = {"check_same_thread": False}
 elif DATABASE_URL.startswith("mysql+pymysql://"):
     if SSL_CA:
